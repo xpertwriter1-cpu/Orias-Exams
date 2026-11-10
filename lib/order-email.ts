@@ -17,6 +17,7 @@ export async function sendOrderEmail(order: OrderRequest, requestId: string) {
     order.otherItems ? `Other books or stationery: ${order.otherItems}` : "",
     "",
     order.fulfilment === "delivery" ? `Delivery to: ${order.deliveryLocation}` : "Will collect from the shop",
+    order.preferredDate ? `Preferred date: ${order.preferredDate}` : "",
     order.notes ? `Notes: ${order.notes}` : "",
   ].filter((line, index, all) => line !== "" || all[index - 1] !== "");
   const response = await fetch("https://api.resend.com/emails", {

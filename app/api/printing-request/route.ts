@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import getMongoClient, { dbName } from "@/lib/mongodb";
 import { getSession } from "@/lib/session";
 import { sendQuoteEmail, type PrintingQuote } from "@/lib/quote-email";
+import { parseFutureDate } from "@/lib/dates";
 
 export async function POST(req: Request) {
   const redirect = (query: string) => NextResponse.redirect(new URL(`/request-printing?${query}`, req.url), 303);
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
     const session = await getSession();
     const client = await getMongoClient();
     const requests = client.db(dbName).collection("printingRequests");
-    const result = await requests.insertOne({ ...data, userId: session?.id || null, status: "new", createdAt: new Date(), emailStatus: "pending" });
+    const result = await requests.insertOne({ ...data, preferredDate: parseFutureDate(form.get("preferredDate")), userId: session?.id || null, status: "new", createdAt: new Date(), emailStatus: "pending" });
     let emailId: string;
     try {
       emailId = await sendQuoteEmail(data, result.insertedId.toString());

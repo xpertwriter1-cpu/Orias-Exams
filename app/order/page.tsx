@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { todayInKenya } from "@/lib/dates";
 import { orderableProducts } from "@/lib/order-request";
 
 const MESSAGES: Record<string, string> = {
@@ -50,6 +51,7 @@ export default async function Order({ searchParams }: { searchParams: Promise<{ 
               <option value="delivery">Please deliver</option>
             </select>
           </div>
+          <div className="field"><label htmlFor="preferredDate">Preferred collection or delivery date (optional)</label><input id="preferredDate" name="preferredDate" type="date" min={todayInKenya()} /></div>
           <div className="field"><label htmlFor="deliveryLocation">Delivery location (if delivering)</label><input id="deliveryLocation" name="deliveryLocation" maxLength={300} /></div>
           <div className="field"><label htmlFor="notes">Anything else? (optional)</label><textarea id="notes" name="notes" rows={3} maxLength={2000} /></div>
           <div className="field hidden-field" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" name="website" tabIndex={-1} autoComplete="off" /></div>

@@ -1,4 +1,5 @@
 import { products } from "@/data/products";
+import { parseFutureDate } from "@/lib/dates";
 
 export interface OrderItem { slug: string; name: string; quantity: number; indicativePrice: number }
 
@@ -11,6 +12,7 @@ export interface OrderRequest {
   otherItems: string;
   fulfilment: "collect" | "delivery";
   deliveryLocation: string;
+  preferredDate: string | null;
   notes: string;
 }
 
@@ -30,6 +32,7 @@ export function parseOrderForm(form: FormData): { order: OrderRequest } | { erro
     otherItems: text(form, "otherItems", 2000),
     fulfilment: form.get("fulfilment") === "delivery" ? "delivery" : "collect",
     deliveryLocation: text(form, "deliveryLocation", 300),
+    preferredDate: parseFutureDate(form.get("preferredDate")),
     notes: text(form, "notes", 2000),
   };
   if (!order.name || !order.phone || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(order.email)) return { error: "required" };

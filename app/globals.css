@@ -10,3 +10,21 @@
 .login-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;margin:8px 0 20px;background:#eef3f9;border-radius:10px}
 .login-tabs a{text-align:center;padding:10px;border-radius:8px;font-weight:700;color:inherit;text-decoration:none}
 .login-tabs a.on{background:white;box-shadow:0 2px 8px #102b4e1a}
+.request-card{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;background:white}
+.request-card>header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.request-card h3{margin:0 0 4px}
+.request-card p{margin:4px 0}
+.request-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px}
+.request-grid .details div{margin-bottom:4px;white-space:pre-wrap}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#eef3f9}
+.status-new{background:#fff4d6;color:#7a5600}
+.status-approved{background:#e3f5ea;color:#17663a}
+.status-rejected{background:#fde8e8;color:#9b1c1c}
+.status-reschedule{background:#e6efff;color:#1d4ea8}
+.decision{margin-top:12px;padding:10px 14px;background:#f6f9fc;border-radius:10px}
+.decision .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.decision-form{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.decision-form fieldset{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap}
+.decision-form legend{font-weight:700;margin-bottom:6px}
+.decision-form fieldset label{display:flex;gap:6px;align-items:center}
+@media (max-width:700px){.request-grid{grid-template-columns:1fr}}
