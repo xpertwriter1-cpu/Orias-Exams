@@ -35,6 +35,9 @@ export function codeEmailSender(purpose: CodePurpose): SendCode {
       }),
       signal: AbortSignal.timeout(15000),
     });
-    if (!response.ok) throw new Error(`Email service returned HTTP ${response.status}`);
+    if (!response.ok) {
+      const detail = await response.json().then((body: { message?: string }) => body.message ?? "").catch(() => "");
+      throw new Error(`Email service returned HTTP ${response.status}${detail ? `: ${detail}` : ""}`);
+    }
   };
 }

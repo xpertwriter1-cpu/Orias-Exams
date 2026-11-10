@@ -55,7 +55,15 @@ export async function requestEmailCode(
     createdAt: now,
     expiresAt: new Date(now.getTime() + CODE_MINUTES * 60_000),
   });
-  await send(email, code, insertedId.toString());
+  try {
+    await send(email, code, insertedId.toString());
+    await codes.updateOne({ _id: insertedId }, { $set: { sentAt: new Date() } });
+  } catch (error) {
+    // Kept with the request (deleted after a day) so a failed email can be diagnosed.
+    const reason = error instanceof Error ? error.message : "Unknown error";
+    await codes.updateOne({ _id: insertedId }, { $set: { sendError: reason.slice(0, 300) } }).catch(() => undefined);
+    throw error;
+  }
 }
 
 /** True only for the latest unused, unexpired code, within the allowed number of tries. A code works once. */
