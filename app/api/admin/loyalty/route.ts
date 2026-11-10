@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdmin } from "@/lib/admin-auth";
 import { addPoints, giveReward, pointsFor } from "@/lib/loyalty";
 
-/** Admin: add points for a shop purchase, or give a free gift (uses 850 points). */
+/** Admin: add points for a shop purchase, or give a phone (uses 850 points). */
 export async function POST(req: Request) {
   const back = (query: string) => NextResponse.redirect(new URL(`/admin?${query}#loyalty`, req.url), 303);
   const origin = req.headers.get("origin");

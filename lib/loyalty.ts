@@ -2,7 +2,7 @@ import type { Db, Document } from "mongodb";
 import { normaliseMpesaPhone } from "./mpesa";
 import { COLLECTIONS, type RequestKind } from "./request-decisions";
 
-/** 1 point for every shilling spent; a free gift at 850 points. */
+/** 1 point for every shilling spent; a phone at 850 points. */
 export const POINTS_PER_KES = 1;
 export const POINTS_TARGET = 850;
 
@@ -62,7 +62,7 @@ export async function awardForRequest(db: Db, kind: RequestKind, doc: Document, 
   return points;
 }
 
-/** Uses 850 points for a free gift. Points above the target carry over. */
+/** Uses 850 points for a phone. Points above the target carry over. */
 export async function giveReward(db: Db, rawPhone: unknown, by: string): Promise<boolean> {
   const phone = loyaltyPhone(rawPhone);
   if (!phone) return false;
@@ -72,7 +72,7 @@ export async function giveReward(db: Db, rawPhone: unknown, by: string): Promise
     {
       $inc: { points: -POINTS_TARGET, rewardsGiven: 1 },
       $set: { updatedAt: now },
-      $push: { history: { $each: [{ at: now, points: -POINTS_TARGET, reason: "Free gift given", by }], $slice: -100 } } as Document,
+      $push: { history: { $each: [{ at: now, points: -POINTS_TARGET, reason: "Phone given", by }], $slice: -100 } } as Document,
     },
   );
   return result.modifiedCount === 1;

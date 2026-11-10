@@ -21,8 +21,8 @@ export default async function Points({ searchParams }: { searchParams: Promise<{
         <div className="navlinks"><Link href="/">Home</Link><Link href="/products">Products</Link><Link href="/cart">Basket</Link></div>
       </header>
       <main className="formwrap">
-        <h1>🎁 Loyalty rewards</h1>
-        <p>Earn <strong>{POINTS_PER_KES} point for every KES 1</strong> you spend with us. Reach <strong>{POINTS_TARGET} points</strong> and get a <strong>free gift</strong>.</p>
+        <h1>📱 Loyalty rewards</h1>
+        <p>Earn <strong>{POINTS_PER_KES} point for every KES 1</strong> you spend with us. Reach <strong>{POINTS_TARGET} points</strong> and get a <strong>phone</strong>.</p>
         <p>Points are saved against your phone number, so you collect them whether you order online or buy in the shop.</p>
 
         <form action="/api/points" method="post" className="inline-form">
@@ -35,11 +35,11 @@ export default async function Points({ searchParams }: { searchParams: Promise<{
           <div className="points-card">
             <p>{displayPhone(phone)}</p>
             <p className="points-total"><strong>{points.toLocaleString("en-KE")}</strong> points</p>
-            <div className="points-bar" role="progressbar" aria-valuemin={0} aria-valuemax={POINTS_TARGET} aria-valuenow={Math.min(points, POINTS_TARGET)} aria-label="Progress to your free gift"><span style={{ width: `${percent}%` }} /></div>
+            <div className="points-bar" role="progressbar" aria-valuemin={0} aria-valuemax={POINTS_TARGET} aria-valuenow={Math.min(points, POINTS_TARGET)} aria-label="Progress to your phone"><span style={{ width: `${percent}%` }} /></div>
             {points >= POINTS_TARGET
-              ? <p className="notice" role="status">🎉 You&rsquo;ve earned a free gift! Show this number at the shop to collect it.</p>
-              : <p>{(POINTS_TARGET - points).toLocaleString("en-KE")} more points to your free gift.</p>}
-            {Number(record?.rewardsGiven ?? 0) > 0 && <p>Gifts collected so far: {Number(record?.rewardsGiven)}</p>}
+              ? <p className="notice" role="status">🎉 You&rsquo;ve earned a phone! Show this number at the shop to collect it.</p>
+              : <p>{(POINTS_TARGET - points).toLocaleString("en-KE")} more points to your phone.</p>}
+            {Number(record?.rewardsGiven ?? 0) > 0 && <p>Phones collected so far: {Number(record?.rewardsGiven)}</p>}
             {Array.isArray(record?.history) && record.history.length > 0 && (
               <>
                 <h2>Recent points</h2>

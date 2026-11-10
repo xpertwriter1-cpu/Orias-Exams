@@ -23,7 +23,7 @@ export const SERVICES = [
   { icon: "🌱", title: "Supergro organic fertiliser", text: "Organic fertiliser for farmers and gardeners." },
   { icon: "🖇️", title: "Office stationery", text: "Stationery for offices, schools and individuals." },
   { icon: "🚚", title: "Countrywide delivery", text: "We deliver to all counties in Kenya." },
-  { icon: "🎁", title: "Loyalty rewards", text: "Earn 1 point per KES 1 spent. A free gift at 850 points." },
+  { icon: "📱", title: "Loyalty rewards", text: "Earn 1 point per KES 1 spent. Get a phone at 850 points." },
 ];
 
 /** The short reference customers use as the Paybill account number. It's also shown on their M-Pesa prompt. */

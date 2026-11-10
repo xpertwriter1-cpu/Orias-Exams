@@ -46,8 +46,8 @@ export default async function Home() {
 
         <section className="rewards-band">
           <div>
-            <h2>🎁 Rewards for our esteemed customers</h2>
-            <p>The more you buy, the more points you earn: 1 point for every KES 1. Reach <strong>{POINTS_TARGET} points</strong> and get a <strong>free gift</strong>. Points are saved against your phone number, online or in the shop.</p>
+            <h2>📱 Rewards for our esteemed customers</h2>
+            <p>The more you buy, the more points you earn: 1 point for every KES 1. Reach <strong>{POINTS_TARGET} points</strong> and get a <strong>phone</strong>. Points are saved against your phone number, online or in the shop.</p>
           </div>
           <Link className="btn gold" href="/points">Check my points</Link>
         </section>

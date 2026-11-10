@@ -113,7 +113,7 @@ function RequestCard({ kind, r, siteUrl, today }: { kind: RequestKind; r: Docume
 
 const LOYALTY_MESSAGES: Record<string, string> = {
   added: "Points added.",
-  given: "Free gift recorded. 850 points were used.",
+  given: "Phone recorded. 850 points were used.",
   "not-enough": "That customer doesn't have 850 points yet.",
   invalid: "Enter a Safaricom number and the amount spent in shillings.",
 };
@@ -154,7 +154,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         </div>
 
         <h2 id="loyalty">Loyalty points</h2>
-        <p>Customers earn 1 point per KES 1 when an order is marked paid. At {POINTS_TARGET} points they get a free gift.</p>
+        <p>Customers earn 1 point per KES 1 when an order is marked paid. At {POINTS_TARGET} points they get a phone.</p>
         {params.loyalty && <p className="notice" role="status">{LOYALTY_MESSAGES[params.loyalty] ?? LOYALTY_MESSAGES.invalid}</p>}
         <form className="request-card loyalty-form" action="/api/admin/loyalty" method="post">
           <input type="hidden" name="action" value="add" />
@@ -168,15 +168,15 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         {loyalty.length === 0 ? <p className="notice">No points recorded yet.</p> : (
           <div className="requests-wrap">
             <table className="requests">
-              <thead><tr><th>Customer</th><th>Points</th><th>Gifts given</th><th></th></tr></thead>
+              <thead><tr><th>Customer</th><th>Points</th><th>Phones given</th><th></th></tr></thead>
               <tbody>
                 {loyalty.map((c) => (
                   <tr key={String(c.phone)}>
                     <td>{c.name ? <>{String(c.name)}<br /></> : null}{displayPhone(String(c.phone))}</td>
-                    <td><strong>{Number(c.points ?? 0).toLocaleString("en-KE")}</strong>{Number(c.points) >= POINTS_TARGET && <> · <span className="status-badge status-approved">Free gift due</span></>}</td>
+                    <td><strong>{Number(c.points ?? 0).toLocaleString("en-KE")}</strong>{Number(c.points) >= POINTS_TARGET && <> · <span className="status-badge status-approved">Phone due</span></>}</td>
                     <td>{Number(c.rewardsGiven ?? 0)}</td>
                     <td>{Number(c.points) >= POINTS_TARGET && (
-                      <form action="/api/admin/loyalty" method="post"><input type="hidden" name="action" value="reward" /><input type="hidden" name="phone" value={String(c.phone)} /><button className="btn smallbtn" type="submit">Give free gift</button></form>
+                      <form action="/api/admin/loyalty" method="post"><input type="hidden" name="action" value="reward" /><input type="hidden" name="phone" value={String(c.phone)} /><button className="btn smallbtn" type="submit">Give phone</button></form>
                     )}</td>
                   </tr>
                 ))}
