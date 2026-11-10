@@ -1,0 +1,12 @@
+# Private settings: never upload
+.env
+.env.*
+!.env.example
+
+# Generated and local files
+node_modules/
+.next/
+.npm-cache/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts

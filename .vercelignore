@@ -1,0 +1,7 @@
+# Private settings and local files must never be uploaded.
+.env
+.env.*
+!.env.example
+.npm-cache
+.next
+node_modules
