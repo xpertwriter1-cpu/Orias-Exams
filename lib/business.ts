@@ -11,7 +11,7 @@ export const PAYBILL = "679013";
 
 export const WHATSAPP_GROUP = "https://chat.whatsapp.com/JgdM78A0LepKPAeh3cdqto";
 
-export const WHATSAPP_CONTACT = "https://wa.me/254711983880";
+export const WHATSAPP_CONTACT = "https://wa.me/254711983880?text=Hello%20Oria%20Exam%20Supplies%2C%20I%20have%20an%20enquiry.";
 
 export const BUSINESS_EMAIL = "teledoor2030@gmail.com";
 
