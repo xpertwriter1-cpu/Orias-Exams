@@ -58,7 +58,7 @@ This is a deliberate manual promotion step; public registration never grants adm
 Sample prices and contact details in the UI are placeholders for development and should be confirmed before the site goes live.
 
 ## Printing quote email notifications
-Printing requests are saved in MongoDB and emailed to `admin@oriaexamsupplies.co.ke` through Resend. Replies go to the customer's email address.
+Printing and order requests are saved in MongoDB and emailed to the `ADMIN_EMAIL` address through Resend. Replies go to the customer's email address.
 
 Set these values in `.env.local` (and your hosting environment):
 - `RESEND_API_KEY`: an API key with sending access from your Resend account.

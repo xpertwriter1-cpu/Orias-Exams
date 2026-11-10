@@ -9,7 +9,7 @@ function getSecret() {
   if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET must be set to at least 32 characters");
   return new TextEncoder().encode("development-only-change-this-secret-please");
 }
-export async function createSession(user: { id: string; name: string; email: string; role: string }) {
+export async function createSession(user: { id: string; name: string; email: string; role: string; method?: "email-code" }) {
   const token = await new SignJWT(user).setProtectedHeader({ alg: "HS256" })
     .setIssuedAt().setExpirationTime("7d").sign(getSecret());
   (await cookies()).set("oria_session", token, {

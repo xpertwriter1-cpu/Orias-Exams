@@ -1,3 +1,4 @@
+import { notifyAddress } from "./notify";
 export type PrintingQuote = Record<"organization" | "contactName" | "email" | "phone" | "service" | "details", string>;
 
 export async function sendQuoteEmail(quote: PrintingQuote, requestId: string) {
@@ -8,7 +9,7 @@ export async function sendQuoteEmail(quote: PrintingQuote, requestId: string) {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": `printing-quote/${requestId}` },
     body: JSON.stringify({
-      from, to: ["admin@oriaexamsupplies.co.ke"], reply_to: quote.email,
+      from, to: [notifyAddress()], reply_to: quote.email,
       subject: "New printing quote request - Oria Exam Supplies",
       text: [`Reference: ${requestId}`, `School / organisation: ${quote.organization}`, `Contact person: ${quote.contactName}`, `Email: ${quote.email}`, `Phone: ${quote.phone}`, `Service required: ${quote.service}`, "", "Quantity / details:", quote.details].join("\n"),
     }),
