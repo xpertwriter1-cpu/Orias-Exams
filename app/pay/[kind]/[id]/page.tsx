@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import getMongoClient, { dbName } from "@/lib/mongodb";
+import { PAYBILL, PHONES, paymentReference } from "@/lib/business";
 import { formatDate } from "@/lib/dates";
 import { mpesaConfig } from "@/lib/mpesa";
 import { canPay, findByAccessToken, paymentStatus, refreshPayment } from "@/lib/payments";
@@ -12,7 +13,7 @@ const START_MESSAGES: Record<string, string> = {
   phone: "Please enter a Safaricom number, for example 0712 345 678.",
   "too-many": "Too many payment attempts. Please wait 10 minutes and try again.",
   failed: "M-Pesa couldn't send the payment prompt. Please try again.",
-  "not-configured": "M-Pesa payments aren't switched on yet. Please pay at the shop or contact us.",
+  "not-configured": "The phone prompt isn't switched on yet. Please use the Paybill details below.",
   "not-payable": "This request isn't ready for payment.",
   unavailable: "Something went wrong. Please try again shortly.",
 };
@@ -82,11 +83,17 @@ export default async function PayPage({ params, searchParams }: {
                 <div className="field"><label htmlFor="phone">Safaricom number to pay from</label><input id="phone" name="phone" type="tel" autoComplete="tel" required placeholder="07..." defaultValue={String(doc.phone ?? "")} /></div>
                 <button className="btn" type="submit">Send M-Pesa prompt to my phone</button>
               </form>
-            ) : (
-              <p className="notice">M-Pesa payments aren&rsquo;t switched on yet. Please pay at the shop or contact us.</p>
-            )}
+            ) : null}
+            <div className="notice paybill">
+              <strong>{configured ? "Or pay with M-Pesa Paybill" : "Pay with M-Pesa Paybill"}</strong>
+              <div>Business number: <strong>{PAYBILL}</strong></div>
+              <div>Account number: <strong>{paymentReference(id)}</strong></div>
+              <div>Amount: <strong>{kes(amount)}</strong></div>
+              <small>We&rsquo;ll mark your order as paid once we see the payment. You can also pay by cash or cheque at the shop.</small>
+            </div>
           </>
         )}
+        <p>Questions? Call {PHONES.map((p) => p.display).join(" or ")}.</p>
         <p><Link href="/products">Continue shopping</Link></p>
       </main>
     </>

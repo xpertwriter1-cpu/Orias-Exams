@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { ObjectId, type Db, type Document } from "mongodb";
 import { mpesaConfig, normaliseMpesaPhone, stkPush, stkQuery, type MpesaConfig, type StkCallback } from "./mpesa";
+import { paymentReference } from "./business";
 import { COLLECTIONS, type RequestKind } from "./request-decisions";
 
 export const newAccessToken = () => randomBytes(16).toString("hex");
@@ -43,7 +44,7 @@ export async function startPayment(db: Db, kind: RequestKind, doc: Document, pho
   const result = await stkPush(cfg, {
     phone,
     amount,
-    accountReference: `ORIA${doc._id.toString().slice(-6).toUpperCase()}`,
+    accountReference: paymentReference(doc._id.toString()),
     description: kind === "order" ? "Oria order" : "Oria printing",
     callbackUrl: `${siteUrl}/api/mpesa/callback/${callbackToken}`,
   });

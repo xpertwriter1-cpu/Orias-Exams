@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { ObjectId, type Db, type Document } from "mongodb";
+import { PAYBILL, PHONES, paymentReference } from "./business";
 import { formatDate, parseFutureDate } from "./dates";
 
 export type RequestKind = "order" | "printing";
@@ -78,7 +79,7 @@ export function customerMessage(kind: RequestKind, request: Document, siteUrl: s
   if (status === "approved") {
     subject = `Your ${what.label} is approved`;
     const payLine = amount > 0 && link
-      ? `\n\nThe total is KES ${amount.toLocaleString("en-KE")}. Pay by M-Pesa here: ${link}`
+      ? `\n\nThe total is KES ${amount.toLocaleString("en-KE")}. Pay by M-Pesa here: ${link}\nOr use M-Pesa Paybill ${PAYBILL}, account number ${paymentReference(request._id.toString())}. You can also pay by cash or cheque at the shop.`
       : `\n\nWe'll be in touch about collection and payment.${link ? ` You can check your request here: ${link}` : ""}`;
     body = `Good news: your ${what.label} has been approved${preferred ? ` for ${preferred}` : ""}.${noteLine}${payLine}\n\nReply to this message if you have any questions.`;
   } else if (status === "rejected") {
@@ -89,7 +90,7 @@ export function customerMessage(kind: RequestKind, request: Document, siteUrl: s
     subject = `Please choose another date for your ${what.label}`;
     body = `Thank you for your ${what.label}. We can't do it on ${preferred || "the date you asked for"}, so please book another date. We can offer ${proposed}.${noteLine}\n\nReply to confirm the new date, or send a new request at ${newRequestLink}`;
   }
-  return { subject: `${subject} - Oria Exam Supplies`, text: `Hello ${name},\n\n${body}\n\nOria Exam Supplies` };
+  return { subject: `${subject} - Oria Exam Supplies`, text: `Hello ${name},\n\n${body}\n\nOria Exam Supplies\n${PHONES.map((p) => p.display).join(" / ")}` };
 }
 
 /** Turns a Kenyan or international number into a WhatsApp link, or null if it doesn't look like a phone number. */

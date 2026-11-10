@@ -40,3 +40,6 @@
 .paid-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .paid-form input{border:1px solid #cbd7e5;border-radius:8px;padding:8px;min-width:200px}
 @media (max-width:560px){.basket-line{grid-template-columns:1fr}}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.paybill div{margin:3px 0}
+.paybill small{display:block;margin-top:6px}
