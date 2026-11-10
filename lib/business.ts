@@ -11,6 +11,10 @@ export const PAYBILL = "679013";
 
 export const WHATSAPP_GROUP = "https://chat.whatsapp.com/JgdM78A0LepKPAeh3cdqto";
 
+export const WHATSAPP_CONTACT = "https://wa.me/254711983880";
+
+export const BUSINESS_EMAIL = "teledoor2030@gmail.com";
+
 export const DELIVERY_AREA = "all counties in Kenya";
 
 export const PAYMENT_METHODS = ["Cash", "Cheque", `M-Pesa Paybill ${PAYBILL}`];

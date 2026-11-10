@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { products } from "@/data/products";
-import { DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES, WHATSAPP_GROUP } from "@/lib/business";
+import { BUSINESS_EMAIL, DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES, WHATSAPP_CONTACT, WHATSAPP_GROUP } from "@/lib/business";
 import { POINTS_TARGET } from "@/lib/loyalty";
 import { getSession } from "@/lib/session";
 
@@ -84,7 +84,7 @@ export default async function Home() {
         <div className="footergrid">
           <div><div className="brand" style={{ color: "white" }}>📚 ORIA<small style={{ color: "#d7e4f4" }}>EXAM SUPPLIES</small></div><p>Wholesale &amp; retail dealers in exams, assessment, printing and stationery.</p></div>
           <div><b>Visit Us</b><p>{LOCATION}</p><p>We deliver to {DELIVERY_AREA}.</p></div>
-          <div><b>Contact</b><p>Phone: {phoneLinks}<br />Pay: Cash, cheque or M-Pesa Paybill {PAYBILL}<br /><a href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></p></div>
+          <div><b>Contact</b><p>Phone: {phoneLinks}<br />For any enquiries, reach us on <a href={WHATSAPP_CONTACT} target="_blank" rel="noopener noreferrer">WhatsApp: 0711 983 880</a> or <a href={`mailto:${BUSINESS_EMAIL}`}>{BUSINESS_EMAIL}</a>.<br />Pay: Cash, cheque or M-Pesa Paybill {PAYBILL}<br /><a href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></p></div>
         </div>
         <div className="copyright">© {new Date().getFullYear()} Oria Exam Supplies. All rights reserved. · Kericho, Kenya</div>
       </footer>
