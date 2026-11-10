@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { DELIVERY_AREA } from "@/lib/business";
 import { todayInKenya } from "@/lib/dates";
 import { orderableProducts } from "@/lib/order-request";
 
@@ -49,11 +48,11 @@ export default async function Order({ searchParams }: { searchParams: Promise<{ 
             <label htmlFor="fulfilment">How would you like to get your order?</label>
             <select id="fulfilment" name="fulfilment" defaultValue="collect">
               <option value="collect">I&rsquo;ll collect from the shop</option>
-              <option value="delivery">Please deliver (anywhere in {DELIVERY_AREA})</option>
+              <option value="delivery">Please deliver (to any county in Kenya)</option>
             </select>
           </div>
           <div className="field"><label htmlFor="preferredDate">Preferred collection or delivery date (optional)</label><input id="preferredDate" name="preferredDate" type="date" min={todayInKenya()} /></div>
-          <div className="field"><label htmlFor="deliveryLocation">Delivery location in {DELIVERY_AREA} (if delivering)</label><input id="deliveryLocation" name="deliveryLocation" maxLength={300} /></div>
+          <div className="field"><label htmlFor="deliveryLocation">Delivery location: county and town (if delivering)</label><input id="deliveryLocation" name="deliveryLocation" maxLength={300} /></div>
           <div className="field"><label htmlFor="notes">Anything else? (optional)</label><textarea id="notes" name="notes" rows={3} maxLength={2000} /></div>
           <div className="field hidden-field" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" name="website" tabIndex={-1} autoComplete="off" /></div>
 

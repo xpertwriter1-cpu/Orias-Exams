@@ -9,7 +9,7 @@ export const LOCATION = "Temple Road, opposite the Governor's gate, next to Tulw
 
 export const PAYBILL = "679013";
 
-export const DELIVERY_AREA = "Kericho County";
+export const DELIVERY_AREA = "all counties in Kenya";
 
 export const PAYMENT_METHODS = ["Cash", "Cheque", `M-Pesa Paybill ${PAYBILL}`];
 
@@ -20,7 +20,7 @@ export const SERVICES = [
   { icon: "🗂️", title: "Photocopying & lamination", text: "We also offer photocopying and lamination, from single pages to bulk jobs." },
   { icon: "🌱", title: "Supergro organic fertiliser", text: "Organic fertiliser for farmers and gardeners." },
   { icon: "🖇️", title: "Office stationery", text: "Stationery for offices, schools and individuals." },
-  { icon: "🚚", title: "County-wide delivery", text: "We deliver across Kericho County." },
+  { icon: "🚚", title: "Countrywide delivery", text: "We deliver to all counties in Kenya." },
 ];
 
 /** The short reference customers use as the Paybill account number. It's also shown on their M-Pesa prompt. */
