@@ -12,10 +12,10 @@ export const PAYBILL = "679013";
 export const PAYMENT_METHODS = ["Cash", "Cheque", `M-Pesa Paybill ${PAYBILL}`];
 
 export const SERVICES = [
-  { icon: "📝", title: "Exams & assessment", text: "Exam and assessment materials for schools and individuals." },
-  { icon: "🎓", title: "Graduation gown hire", text: "Gowns for school and college graduation ceremonies." },
-  { icon: "📜", title: "Certificate printing", text: "Certificates printed for schools, events and organisations." },
-  { icon: "🗂️", title: "Lamination & photocopying", text: "From single pages to bulk jobs." },
+  { icon: "📝", title: "Exams & assessment", text: "For primary and secondary schools, and individuals." },
+  { icon: "🎓", title: "Graduation gown hire", text: "Gowns for PP2, Grade 3, Grade 6 and Grade 9 graduations." },
+  { icon: "📜", title: "Certificates for graduates", text: "Graduation certificates, with free lamination." },
+  { icon: "🗂️", title: "Photocopying & lamination", text: "We also offer photocopying and lamination, from single pages to bulk jobs." },
   { icon: "🌱", title: "Supergro organic fertiliser", text: "Organic fertiliser for farmers and gardeners." },
   { icon: "🖇️", title: "Office stationery", text: "Stationery for offices, schools and individuals." },
 ];
