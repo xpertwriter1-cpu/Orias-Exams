@@ -69,6 +69,7 @@ export default async function PayPage({ params, searchParams }: {
         {payment === "paid" && (
           <p className="notice" role="status">Paid {kes(Number(doc.payment?.amount ?? amount))}. Thank you!{doc.payment?.receipt ? ` M-Pesa receipt: ${String(doc.payment.receipt)}.` : ""}</p>
         )}
+        {Number(doc.loyaltyPoints) > 0 && <p className="paynote">🎁 You earned {Number(doc.loyaltyPoints).toLocaleString("en-KE")} loyalty points. <Link href="/points">Check your points</Link></p>}
         {payment === "pending" && (
           <p className="notice" role="status">Check your phone and enter your M-Pesa PIN to pay {kes(Number(doc.payment?.amount ?? amount))}. This page updates by itself.</p>
         )}

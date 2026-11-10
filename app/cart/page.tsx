@@ -27,6 +27,7 @@ export default async function Cart({ searchParams }: { searchParams: Promise<{ e
       <main className="formwrap">
         <h1>Your basket</h1>
         <PayNote />
+        <p className="paynote">🎁 Earn 1 loyalty point for every KES 1 you spend. <Link href="/points">Rewards</Link></p>
         {params.added && <p className="notice" role="status">Added to your basket.</p>}
         {message && <p className="notice" role="alert">{message}</p>}
 

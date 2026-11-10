@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { ObjectId, type Db, type Document } from "mongodb";
 import { mpesaConfig, normaliseMpesaPhone, stkPush, stkQuery, type MpesaConfig, type StkCallback } from "./mpesa";
 import { paymentReference } from "./business";
+import { awardForRequest } from "./loyalty";
 import { COLLECTIONS, type RequestKind } from "./request-decisions";
 
 export const newAccessToken = () => randomBytes(16).toString("hex");
@@ -70,10 +71,12 @@ export async function startPayment(db: Db, kind: RequestKind, doc: Document, pho
 }
 
 async function markPaid(db: Db, kind: RequestKind, doc: Document, receipt: string | null, how: string) {
-  await db.collection(COLLECTIONS[kind]).updateOne(
+  const result = await db.collection(COLLECTIONS[kind]).updateOne(
     { _id: doc._id, "payment.status": { $ne: "paid" } },
     { $set: { "payment.status": "paid", "payment.receipt": receipt, "payment.paidAt": new Date(), "payment.updatedAt": new Date(), "payment.confirmedBy": how } },
   );
+  // Loyalty points for what was actually paid.
+  if (result.modifiedCount === 1) await awardForRequest(db, kind, doc, Number(doc.payment?.amount ?? doc.amountDue));
 }
 
 async function markFailed(db: Db, kind: RequestKind, doc: Document, resultCode: string, resultDesc: string) {
@@ -136,5 +139,8 @@ export async function markPaidManually(db: Db, kind: RequestKind, id: string, no
     { _id: new ObjectId(id), "payment.status": { $ne: "paid" } },
     { $set: { "payment.status": "paid", "payment.receipt": note.slice(0, 60) || null, "payment.paidAt": new Date(), "payment.updatedAt": new Date(), "payment.confirmedBy": `admin ${adminEmail}` } },
   );
-  return result.modifiedCount === 1;
+  if (result.modifiedCount !== 1) return false;
+  const doc = await db.collection(COLLECTIONS[kind]).findOne({ _id: new ObjectId(id) });
+  if (doc) await awardForRequest(db, kind, doc, Number(doc.amountDue));
+  return true;
 }

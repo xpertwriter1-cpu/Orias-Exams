@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { products } from "@/data/products";
-import { DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES } from "@/lib/business";
+import { DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES, WHATSAPP_GROUP } from "@/lib/business";
+import { POINTS_TARGET } from "@/lib/loyalty";
 import { getSession } from "@/lib/session";
 
 function money(n: number) { return `KES ${n.toLocaleString("en-KE")}`; }
@@ -11,11 +12,11 @@ export default async function Home() {
   const session = await getSession();
   return (
     <>
-      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery to {DELIVERY_AREA}</span><span>💳 Cash · Cheque · M-Pesa Paybill {PAYBILL}</span></div>
+      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery to {DELIVERY_AREA}</span><span>💳 Cash · Cheque · M-Pesa Paybill {PAYBILL}</span><span><a href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></span></div>
       <nav className="navbar">
         <Link href="/" className="brand"><span className="brandicon">📚</span><span>ORIA<small>EXAM SUPPLIES · Wholesale &amp; Retail</small></span></Link>
         <div className="navlinks">
-          <Link href="/">Home</Link><a href="#about">About Us</a><a href="#products">Our Products</a><a href="#services">Services</a><a href="#visit">Find Us</a><a href="#contact">Contact</a><Link href="/cart">Basket</Link>
+          <Link href="/">Home</Link><a href="#about">About Us</a><a href="#products">Our Products</a><a href="#services">Services</a><a href="#visit">Find Us</a><a href="#contact">Contact</a><Link href="/points">Rewards</Link><Link href="/cart">Basket</Link>
           {session ? (
             <><span>Signed in as {session.name}</span>{session.role === "admin" && <Link className="btn" href="/admin">Admin</Link>}<form action="/api/auth/logout" method="post"><button className="btn" type="submit">Logout</button></form></>
           ) : (
@@ -43,8 +44,16 @@ export default async function Home() {
           </div>
         </section>
 
+        <section className="rewards-band">
+          <div>
+            <h2>🎁 Rewards for our esteemed customers</h2>
+            <p>The more you buy, the more points you earn: 1 point for every KES 1. Reach <strong>{POINTS_TARGET} points</strong> and get a <strong>free gift</strong>. Points are saved against your phone number, online or in the shop.</p>
+          </div>
+          <Link className="btn gold" href="/points">Check my points</Link>
+        </section>
+
         <section className="section" id="visit">
-          <div className="sectionhead"><div><div className="eyebrow">Find us</div><h2>Visit our shop</h2><p>We&rsquo;re on {LOCATION}. Look for our sign, or call {phoneLinks}.</p></div></div>
+          <div className="sectionhead"><div><div className="eyebrow">Find us</div><h2>Visit our shop</h2><p>We&rsquo;re on {LOCATION}. Look for our sign, or call {phoneLinks}.</p></div><a className="btn whatsapp" href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></div>
           <div className="shop-photos">
             <figure><img src="/shop-sign.webp" alt="Oria Exam&apos;s roadside sign pointing to the photocopy shop, showing 0711 983 880 and 0780 983 880" /><figcaption>Look for our sign on Temple Road</figcaption></figure>
             <figure><img className="top" src="/shop-shelves.webp" alt="Shelves stocked with Super Gro organic fertiliser and KCSE revision books" /><figcaption>Supergro fertiliser and KCSE revision books in stock</figcaption></figure>
@@ -75,7 +84,7 @@ export default async function Home() {
         <div className="footergrid">
           <div><div className="brand" style={{ color: "white" }}>📚 ORIA<small style={{ color: "#d7e4f4" }}>EXAM SUPPLIES</small></div><p>Wholesale &amp; retail dealers in exams, assessment, printing and stationery.</p></div>
           <div><b>Visit Us</b><p>{LOCATION}</p><p>We deliver to {DELIVERY_AREA}.</p></div>
-          <div><b>Contact</b><p>Phone: {phoneLinks}<br />Pay: Cash, cheque or M-Pesa Paybill {PAYBILL}</p></div>
+          <div><b>Contact</b><p>Phone: {phoneLinks}<br />Pay: Cash, cheque or M-Pesa Paybill {PAYBILL}<br /><a href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></p></div>
         </div>
         <div className="copyright">© {new Date().getFullYear()} Oria Exam Supplies. All rights reserved. · Kericho, Kenya</div>
       </footer>

@@ -5,6 +5,7 @@ import type { Document } from "mongodb";
 import { getAdmin } from "@/lib/admin-auth";
 import { formatDate, todayInKenya } from "@/lib/dates";
 import { paymentStatus } from "@/lib/payments";
+import { POINTS_TARGET, displayPhone } from "@/lib/loyalty";
 import { STATUS_LABELS, customerMessage, mailtoLink, whatsappLink, type RequestKind } from "@/lib/request-decisions";
 
 export const dynamic = "force-dynamic";
@@ -110,7 +111,14 @@ function RequestCard({ kind, r, siteUrl, today }: { kind: RequestKind; r: Docume
   );
 }
 
-export default async function Admin({ searchParams }: { searchParams: Promise<{ saved?: string; error?: string }> }) {
+const LOYALTY_MESSAGES: Record<string, string> = {
+  added: "Points added.",
+  given: "Free gift recorded. 850 points were used.",
+  "not-enough": "That customer doesn't have 850 points yet.",
+  invalid: "Enter a Safaricom number and the amount spent in shillings.",
+};
+
+export default async function Admin({ searchParams }: { searchParams: Promise<{ saved?: string; error?: string; loyalty?: string }> }) {
   const admin = await getAdmin();
   if (!admin) redirect("/admin/login");
   const { session: s, db } = admin;
@@ -119,10 +127,11 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const siteUrl = `${host.startsWith("localhost") ? "http" : "https"}://${host}`;
   const today = todayInKenya();
 
-  const [users, orders, requests] = await Promise.all([
+  const [users, orders, requests, loyalty] = await Promise.all([
     db.collection("users").countDocuments(),
     db.collection("orderRequests").find({}).sort({ createdAt: -1 }).limit(50).toArray(),
     db.collection("printingRequests").find({}).sort({ createdAt: -1 }).limit(50).toArray(),
+    db.collection("loyalty").find({}).sort({ points: -1 }).limit(30).toArray(),
   ]);
   const waiting = [...orders, ...requests].filter((r) => (r.status ?? "new") === "new").length;
 
@@ -143,6 +152,38 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
           <article className="product"><div className="productbody"><h3>Printing requests</h3><h2>{requests.length}</h2></div></article>
           <article className="product"><div className="productbody"><h3>Registered users</h3><h2>{users}</h2></div></article>
         </div>
+
+        <h2 id="loyalty">Loyalty points</h2>
+        <p>Customers earn 1 point per KES 1 when an order is marked paid. At {POINTS_TARGET} points they get a free gift.</p>
+        {params.loyalty && <p className="notice" role="status">{LOYALTY_MESSAGES[params.loyalty] ?? LOYALTY_MESSAGES.invalid}</p>}
+        <form className="request-card loyalty-form" action="/api/admin/loyalty" method="post">
+          <input type="hidden" name="action" value="add" />
+          <strong>Add points for a purchase in the shop</strong>
+          <div className="field"><label htmlFor="lp-phone">Customer phone</label><input id="lp-phone" name="phone" type="tel" required placeholder="07..." /></div>
+          <div className="field"><label htmlFor="lp-name">Name (optional)</label><input id="lp-name" name="name" maxLength={120} /></div>
+          <div className="field"><label htmlFor="lp-amount">Amount spent, KES</label><input id="lp-amount" name="amount" inputMode="numeric" required /></div>
+          <div className="field"><label htmlFor="lp-note">Note (optional)</label><input id="lp-note" name="note" maxLength={120} placeholder="e.g. Cash sale, receipt 123" /></div>
+          <button className="btn smallbtn" type="submit">Add points</button>
+        </form>
+        {loyalty.length === 0 ? <p className="notice">No points recorded yet.</p> : (
+          <div className="requests-wrap">
+            <table className="requests">
+              <thead><tr><th>Customer</th><th>Points</th><th>Gifts given</th><th></th></tr></thead>
+              <tbody>
+                {loyalty.map((c) => (
+                  <tr key={String(c.phone)}>
+                    <td>{c.name ? <>{String(c.name)}<br /></> : null}{displayPhone(String(c.phone))}</td>
+                    <td><strong>{Number(c.points ?? 0).toLocaleString("en-KE")}</strong>{Number(c.points) >= POINTS_TARGET && <> · <span className="status-badge status-approved">Free gift due</span></>}</td>
+                    <td>{Number(c.rewardsGiven ?? 0)}</td>
+                    <td>{Number(c.points) >= POINTS_TARGET && (
+                      <form action="/api/admin/loyalty" method="post"><input type="hidden" name="action" value="reward" /><input type="hidden" name="phone" value={String(c.phone)} /><button className="btn smallbtn" type="submit">Give free gift</button></form>
+                    )}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <h2 id="orders">Order requests</h2>
         {orders.length === 0 ? <p className="notice">No order requests yet.</p> : orders.map((r) => <RequestCard key={r._id.toString()} kind="order" r={r} siteUrl={siteUrl} today={today} />)}

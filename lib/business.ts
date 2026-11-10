@@ -9,6 +9,8 @@ export const LOCATION = "Temple Road, opposite the Governor's gate, next to Tulw
 
 export const PAYBILL = "679013";
 
+export const WHATSAPP_GROUP = "https://chat.whatsapp.com/JgdM78A0LepKPAeh3cdqto";
+
 export const DELIVERY_AREA = "all counties in Kenya";
 
 export const PAYMENT_METHODS = ["Cash", "Cheque", `M-Pesa Paybill ${PAYBILL}`];
@@ -21,6 +23,7 @@ export const SERVICES = [
   { icon: "🌱", title: "Supergro organic fertiliser", text: "Organic fertiliser for farmers and gardeners." },
   { icon: "🖇️", title: "Office stationery", text: "Stationery for offices, schools and individuals." },
   { icon: "🚚", title: "Countrywide delivery", text: "We deliver to all counties in Kenya." },
+  { icon: "🎁", title: "Loyalty rewards", text: "Earn 1 point per KES 1 spent. A free gift at 850 points." },
 ];
 
 /** The short reference customers use as the Paybill account number. It's also shown on their M-Pesa prompt. */
