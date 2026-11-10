@@ -3,6 +3,7 @@ import { products } from "@/data/products";
 import { BUSINESS_EMAIL, DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES, WHATSAPP_CONTACT, WHATSAPP_GROUP } from "@/lib/business";
 import { POINTS_TARGET } from "@/lib/loyalty";
 import { getSession } from "@/lib/session";
+import StorefrontNav from "@/components/StorefrontNav";
 
 function money(n: number) { return `KES ${n.toLocaleString("en-KE")}`; }
 
@@ -13,17 +14,7 @@ export default async function Home() {
   return (
     <>
       <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery to {DELIVERY_AREA}</span><span>💳 Cash · Cheque · M-Pesa Paybill {PAYBILL}</span><span><a href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></span></div>
-      <nav className="navbar">
-        <Link href="/" className="brand"><span className="brandicon">📚</span><span>ORIA<small>EXAM SUPPLIES · Wholesale &amp; Retail</small></span></Link>
-        <div className="navlinks">
-          <Link href="/">Home</Link><a href="#about">About Us</a><a href="#products">Our Products</a><a href="#services">Services</a><a href="#visit">Find Us</a><a href="#contact">Contact</a><Link href="/points">Rewards</Link><Link href="/cart">Basket</Link>
-          {session ? (
-            <><span>Signed in as {session.name}</span>{session.role === "admin" && <Link className="btn" href="/admin">Admin</Link>}<form action="/api/auth/logout" method="post"><button className="btn" type="submit">Logout</button></form></>
-          ) : (
-            <><Link className="btn" href="/login">Login</Link><Link className="btn gold" href="/register">Register</Link></>
-          )}
-        </div>
-      </nav>
+      <StorefrontNav session={session ? { name: session.name, role: session.role } : null} />
       <main>
         <section className="hero">
           <div>
