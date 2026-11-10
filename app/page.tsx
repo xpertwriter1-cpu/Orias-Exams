@@ -15,7 +15,7 @@ export default async function Home() {
       <nav className="navbar">
         <Link href="/" className="brand"><span className="brandicon">📚</span><span>ORIA<small>EXAM SUPPLIES · Wholesale &amp; Retail</small></span></Link>
         <div className="navlinks">
-          <Link href="/">Home</Link><a href="#about">About Us</a><a href="#products">Our Products</a><a href="#services">Services</a><a href="#contact">Contact</a><Link href="/cart">Basket</Link>
+          <Link href="/">Home</Link><a href="#about">About Us</a><a href="#products">Our Products</a><a href="#services">Services</a><a href="#visit">Find Us</a><a href="#contact">Contact</a><Link href="/cart">Basket</Link>
           {session ? (
             <><span>Signed in as {session.name}</span>{session.role === "admin" && <Link className="btn" href="/admin">Admin</Link>}<form action="/api/auth/logout" method="post"><button className="btn" type="submit">Logout</button></form></>
           ) : (
@@ -43,9 +43,17 @@ export default async function Home() {
           </div>
         </section>
 
+        <section className="section" id="visit">
+          <div className="sectionhead"><div><div className="eyebrow">Find us</div><h2>Visit our shop</h2><p>We&rsquo;re on {LOCATION}. Look for our sign, or call {phoneLinks}.</p></div></div>
+          <div className="shop-photos">
+            <figure><img src="/shop-sign.webp" alt="Oria Exam&apos;s roadside sign pointing to the photocopy shop, showing 0711 983 880 and 0780 983 880" /><figcaption>Look for our sign on Temple Road</figcaption></figure>
+            <figure><img className="top" src="/shop-shelves.webp" alt="Shelves stocked with Super Gro organic fertiliser and KCSE revision books" /><figcaption>Supergro fertiliser and KCSE revision books in stock</figcaption></figure>
+          </div>
+        </section>
+
         <section className="section" id="products">
           <div className="sectionhead"><div><div className="eyebrow">Explore our catalogue</div><h2>Our Products</h2><p>Add what you need to your basket and send it as an order.</p></div><Link className="btn outline" href="/products">View All Products →</Link></div>
-          <div className="products">{products.slice(0, 4).map((p) => <article className="product" key={p.slug}><div className="productvisual">{p.icon}</div><div className="productbody"><h3>{p.name}</h3><p>{p.description}</p><div className="price">{p.price ? money(p.price) : "Request a quote"}</div><Link className="btn" href={`/products/${p.slug}`}>View Details</Link></div></article>)}</div>
+          <div className="products">{products.slice(0, 4).map((p) => <article className="product" key={p.slug}><div className="productvisual">{p.image ? <img src={p.image} alt={p.imageAlt ?? p.name} /> : p.icon}</div><div className="productbody"><h3>{p.name}</h3><p>{p.description}</p><div className="price">{p.price ? money(p.price) : "Request a quote"}</div><Link className="btn" href={`/products/${p.slug}`}>View Details</Link></div></article>)}</div>
         </section>
 
         <section className="serviceband">

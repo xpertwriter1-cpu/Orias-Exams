@@ -1,4 +1,6 @@
-export const products = [
+export type Product = { slug: string; name: string; category: string; description: string; price: number; icon: string; image?: string; imageAlt?: string };
+
+export const products: Product[] = [
  {slug:"model-mock-papers",name:"Model Mock Papers",category:"Mock Papers",description:"Practice papers to help learners prepare with confidence.",price:250,icon:"📘"},
  {slug:"revision-materials",name:"Revision Materials",category:"Revision",description:"Revision booklets and subject-focused study materials.",price:180,icon:"📚"},
  {slug:"school-exam-papers",name:"School Exam Papers",category:"Exam Papers",description:"Internal assessment papers for schools and learning institutions.",price:150,icon:"📝"},
@@ -14,5 +16,5 @@ export const products = [
  {slug:"certificate-printing",name:"Certificates for Graduates",category:"Graduation",description:"Graduation certificates, laminated free of charge.",price:0,icon:"📜"},
  {slug:"lamination-photocopying",name:"Lamination & Photocopying",category:"Printing",description:"Lamination and photocopying, from single pages to bulk jobs.",price:0,icon:"🗂️"},
  {slug:"office-stationery",name:"Office Stationery",category:"Stationery",description:"Office stationery for businesses, schools and individuals.",price:0,icon:"🖇️"},
- {slug:"supergro-fertilizer",name:"Supergro Organic Fertiliser",category:"Agriculture",description:"Supergro organic fertiliser for farmers and gardeners.",price:0,icon:"🌱"}
+ {slug:"supergro-fertilizer",name:"Supergro Organic Fertiliser",category:"Agriculture",description:"Supergro organic fertiliser for farmers and gardeners.",price:0,icon:"🌱",image:"/shop-shelves.webp",imageAlt:"Super Gro bottles on the shelf at Oria Exam Supplies"}
 ];
