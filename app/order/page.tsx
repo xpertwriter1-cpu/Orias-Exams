@@ -1,3 +1,4 @@
+import PayNote from "@/components/PayNote";
 import Link from "next/link";
 import { todayInKenya } from "@/lib/dates";
 import { orderableProducts } from "@/lib/order-request";
@@ -21,6 +22,7 @@ export default async function Order({ searchParams }: { searchParams: Promise<{ 
       <main className="formwrap">
         <h1>Request an order</h1>
         <p>Order books, exam materials and stationery. No account needed. We&rsquo;ll contact you to confirm prices, availability and payment.</p>
+        <PayNote />
         {params.success === "1" && <p className="notice" role="status">Thank you. We&rsquo;ve received your order request and will contact you soon.</p>}
         {message && <p className="notice" role="alert">{message}</p>}
 

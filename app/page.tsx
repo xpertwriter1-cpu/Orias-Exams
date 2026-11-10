@@ -11,7 +11,7 @@ export default async function Home() {
   const session = await getSession();
   return (
     <>
-      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery to {DELIVERY_AREA}</span></div>
+      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery to {DELIVERY_AREA}</span><span>💳 Cash · Cheque · M-Pesa Paybill {PAYBILL}</span></div>
       <nav className="navbar">
         <Link href="/" className="brand"><span className="brandicon">📚</span><span>ORIA<small>EXAM SUPPLIES · Wholesale &amp; Retail</small></span></Link>
         <div className="navlinks">

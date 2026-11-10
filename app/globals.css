@@ -43,3 +43,4 @@
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .paybill div{margin:3px 0}
 .paybill small{display:block;margin-top:6px}
+.paynote{display:inline-block;background:#e3f5ea;color:#17663a;border-radius:10px;padding:8px 14px;margin:8px 0 14px;font-size:14px}

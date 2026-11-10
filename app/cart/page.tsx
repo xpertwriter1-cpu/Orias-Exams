@@ -1,3 +1,4 @@
+import PayNote from "@/components/PayNote";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { CART_COOKIE, cartDetails, parseCart } from "@/lib/cart";
@@ -25,6 +26,7 @@ export default async function Cart({ searchParams }: { searchParams: Promise<{ e
       </header>
       <main className="formwrap">
         <h1>Your basket</h1>
+        <PayNote />
         {params.added && <p className="notice" role="status">Added to your basket.</p>}
         {message && <p className="notice" role="alert">{message}</p>}
 
