@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import getMongoClient, { dbName } from "@/lib/mongodb";
+import { emailConfigured } from "@/lib/email-config";
 import { createSession } from "@/lib/session";
 
 export async function POST(req: Request) {
@@ -21,8 +22,12 @@ export async function POST(req: Request) {
     const client = await getMongoClient();
     const user = await client.db(dbName).collection("users").findOne({ email });
     if (!user || !(await bcrypt.compare(password, String(user.passwordHash)))) return invalid();
-    // Admins must sign in with a code sent to their email, so a password alone never opens the dashboard.
-    if (user.role === "admin") return NextResponse.redirect(new URL("/admin/login?use=code", req.url), 303);
+    if (user.role === "admin") {
+      // Once email is set up, admins must use an emailed code. Until then their password works.
+      if (emailConfigured()) return NextResponse.redirect(new URL("/admin/login?use=code", req.url), 303);
+      await createSession({ id: user._id.toString(), name: user.name, email: user.email, role: "admin" });
+      return NextResponse.redirect(new URL("/admin", req.url), 303);
+    }
     await createSession({ id: user._id.toString(), name: user.name, email: user.email, role: user.role || "customer" });
     return NextResponse.redirect(new URL(next, req.url), 303);
   } catch (error) {

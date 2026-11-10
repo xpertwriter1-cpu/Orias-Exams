@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { emailConfigured } from "@/lib/email-config";
 import { getSession } from "@/lib/session";
 
 const MESSAGES: Record<string, string> = {
@@ -17,6 +18,9 @@ export default async function AdminLogin({ searchParams }: { searchParams: Promi
       <header className="navbar"><Link className="brand" href="/">📚 ORIA <small>ADMIN SIGN-IN</small></Link></header>
       <main className="formwrap">
         <h1>Admin sign-in</h1>
+        {!emailConfigured() && (
+          <p className="notice" role="status">Email codes aren&rsquo;t switched on yet. For now, <Link href="/login">sign in with your password</Link>.</p>
+        )}
         {params.use === "code" && <p className="notice" role="status">Admin accounts sign in with a code sent to your email instead of a password.</p>}
         {params.sent === "1" && <p className="notice" role="status">If that email belongs to an admin, a 6-digit code is on its way. It expires in 10 minutes. Check your spam folder too.</p>}
         {message && <p className="notice" role="alert">{message}</p>}

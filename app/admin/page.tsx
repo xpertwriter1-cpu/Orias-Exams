@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import getMongoClient, { dbName } from "@/lib/mongodb";
+import { emailConfigured } from "@/lib/email-config";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,9 @@ const EMAIL_STATUS: Record<string, string> = { sent: "Emailed", failed: "Email f
 export default async function Admin() {
   const s = await getSession();
   // Only a sign-in made with an emailed code opens the dashboard.
-  if (!s || s.role !== "admin" || (s as { method?: string }).method !== "email-code") redirect("/admin/login");
+  // Once email is set up, only a sign-in made with an emailed code opens the dashboard.
+  const signedInByCode = (s as { method?: string } | null)?.method === "email-code";
+  if (!s || s.role !== "admin" || (emailConfigured() && !signedInByCode)) redirect("/admin/login");
   const db = (await getMongoClient()).db(dbName);
 
   // Check the account itself, so access ends as soon as the admin role is removed.
