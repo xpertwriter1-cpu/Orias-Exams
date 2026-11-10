@@ -65,3 +65,14 @@ Set these values in `.env.local` (and your hosting environment):
 - `RESEND_FROM_EMAIL`: a sender address on a domain verified in Resend, for example `Oria Exam Supplies <quotes@oriaexamsupplies.co.ke>` after verifying that domain.
 
 Restart the development server after configuring the settings. See https://resend.com/docs/api-reference/emails/send-email for the sending API. Email failures leave the request saved with `emailStatus: failed`; the form confirms the saved request without claiming an email was sent. Failed notifications are not automatically retried.
+
+## Basket and M-Pesa payments
+Customers add items to a basket and send it as an order. The admin approves it on the dashboard and enters the amount to pay. The customer's message (sent with the Email or WhatsApp button) contains a private link where they pay by M-Pesa: the site sends a payment prompt to their phone.
+
+M-Pesa stays switched off until these settings are added in Vercel (and `.env.local`), then the site is redeployed:
+- `MPESA_ENV`: `sandbox` while testing with Safaricom's test system, `production` for real money.
+- `MPESA_CONSUMER_KEY`, `MPESA_CONSUMER_SECRET`: from your app on developer.safaricom.co.ke.
+- `MPESA_SHORTCODE`, `MPESA_PASSKEY`: your Paybill or store number and its M-Pesa Express passkey from Safaricom.
+- `MPESA_TYPE`: `paybill` or `till`. For a till, also set `MPESA_TILL_NUMBER`.
+
+Payment results from Safaricom arrive at a private address made for each payment and are only accepted when they match the payment requested, including the amount. If a result is lost, the customer's page checks with Safaricom. The admin can also record payments made another way with "Mark as paid".

@@ -28,3 +28,15 @@
 .decision-form legend{font-weight:700;margin-bottom:6px}
 .decision-form fieldset label{display:flex;gap:6px;align-items:center}
 @media (max-width:700px){.request-grid{grid-template-columns:1fr}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.basket-line{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.basket-qty{display:flex;gap:6px;align-items:center}
+.basket-qty input{width:80px;border:1px solid #cbd7e5;border-radius:8px;padding:8px}
+.basket-total{font-size:18px;margin:16px 0}
+.linkbutton{background:none;border:0;color:#b42318;text-decoration:underline;cursor:pointer;font:inherit}
+.addform{display:flex;gap:8px;align-items:center;margin:12px 0}
+.addform input{width:90px;border:1px solid #cbd7e5;border-radius:8px;padding:10px}
+.productactions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.paid-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.paid-form input{border:1px solid #cbd7e5;border-radius:8px;padding:8px;min-width:200px}
+@media (max-width:560px){.basket-line{grid-template-columns:1fr}}

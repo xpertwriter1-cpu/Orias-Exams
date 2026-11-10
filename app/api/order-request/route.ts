@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import getMongoClient, { dbName } from "@/lib/mongodb";
 import { sendOrderEmail } from "@/lib/order-email";
 import { parseOrderForm } from "@/lib/order-request";
+import { newAccessToken } from "@/lib/payments";
 import { getSession } from "@/lib/session";
 
 export async function POST(req: Request) {
@@ -14,7 +15,8 @@ export async function POST(req: Request) {
   try {
     const session = await getSession();
     const orders = (await getMongoClient()).db(dbName).collection("orderRequests");
-    const result = await orders.insertOne({ ...parsed.order, userId: session?.id || null, status: "new", emailStatus: "pending", createdAt: new Date() });
+    const accessToken = newAccessToken();
+    const result = await orders.insertOne({ ...parsed.order, source: "form", accessToken, userId: session?.id || null, status: "new", emailStatus: "pending", createdAt: new Date() });
     try {
       const emailId = await sendOrderEmail(parsed.order, result.insertedId.toString());
       await orders.updateOne({ _id: result.insertedId }, { $set: { emailStatus: "sent", emailId, emailSentAt: new Date() } }).catch(() => undefined);
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
       console.error("Order email notification failed:", error instanceof Error ? error.message : "Unknown error");
       await orders.updateOne({ _id: result.insertedId }, { $set: { emailStatus: "failed" } }).catch(() => undefined);
     }
-    return redirect("success=1");
+    return NextResponse.redirect(new URL(`/pay/order/${result.insertedId.toString()}?t=${accessToken}&new=1`, req.url), 303);
   } catch (error) {
     console.error("Order request failed:", error instanceof Error ? error.name : "Unknown error");
     return redirect("error=unavailable");

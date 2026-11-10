@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { ObjectId, type Db, type Document } from "mongodb";
 import { formatDate, parseFutureDate } from "./dates";
 
@@ -22,13 +23,21 @@ export function isRequestKind(value: string): value is RequestKind {
   return value === "order" || value === "printing";
 }
 
-export type DecisionInput = { decision: Decision; note: string; proposedDate: string | null };
+export type DecisionInput = { decision: Decision; note: string; proposedDate: string | null; amountDue?: number | null };
 
 /** Reads the admin's decision form. A new date is required, and must not be in the past, when suggesting one. */
-export function parseDecision(form: FormData, now = new Date()): DecisionInput | { error: "decision" | "date" } {
+export function parseDecision(form: FormData, now = new Date()): DecisionInput | { error: "decision" | "date" | "amount" } {
   const decision = String(form.get("decision") ?? "");
   if (decision !== "approved" && decision !== "rejected" && decision !== "reschedule") return { error: "decision" };
   const note = String(form.get("note") ?? "").trim().slice(0, 1000);
+  if (decision === "approved") {
+    // Optional: the amount the customer pays by M-Pesa, in whole shillings (M-Pesa allows up to 250,000).
+    const raw = String(form.get("amountDue") ?? "").replace(/[,\s]/g, "");
+    if (!raw) return { decision, note, proposedDate: null, amountDue: null };
+    const amount = Number(raw);
+    if (!Number.isInteger(amount) || amount < 1 || amount > 250_000) return { error: "amount" };
+    return { decision, note, proposedDate: null, amountDue: amount };
+  }
   if (decision !== "reschedule") return { decision, note, proposedDate: null };
   const proposedDate = parseFutureDate(form.get("proposedDate"), now);
   return proposedDate ? { decision, note, proposedDate } : { error: "date" };
@@ -38,10 +47,14 @@ export function parseDecision(form: FormData, now = new Date()): DecisionInput |
 export async function applyDecision(db: Db, kind: RequestKind, id: string, input: DecisionInput, adminEmail: string): Promise<Document | null> {
   if (!ObjectId.isValid(id)) return null;
   const decidedAt = new Date();
-  return db.collection(COLLECTIONS[kind]).findOneAndUpdate(
+  const collection = db.collection(COLLECTIONS[kind]);
+  // Older requests may not have a private link yet; give them one so the customer can see the decision and pay.
+  await collection.updateOne({ _id: new ObjectId(id), accessToken: { $exists: false } }, { $set: { accessToken: randomBytes(16).toString("hex") } });
+  const amountDue = input.decision === "approved" ? input.amountDue ?? null : null;
+  return collection.findOneAndUpdate(
     { _id: new ObjectId(id) },
     {
-      $set: { status: input.decision, decisionNote: input.note, proposedDate: input.proposedDate, decidedAt, decidedBy: adminEmail },
+      $set: { status: input.decision, decisionNote: input.note, proposedDate: input.proposedDate, amountDue, decidedAt, decidedBy: adminEmail },
       $push: { history: { status: input.decision, note: input.note, proposedDate: input.proposedDate, at: decidedAt, by: adminEmail } } as Document,
     },
     { returnDocument: "after" },
@@ -60,9 +73,14 @@ export function customerMessage(kind: RequestKind, request: Document, siteUrl: s
   const newRequestLink = `${siteUrl}${what.path}`;
   let subject: string;
   let body: string;
+  const link = request._id && request.accessToken ? `${siteUrl}/pay/${kind}/${request._id.toString()}?t=${request.accessToken}` : "";
+  const amount = Number(request.amountDue);
   if (status === "approved") {
     subject = `Your ${what.label} is approved`;
-    body = `Good news: your ${what.label} has been approved${preferred ? ` for ${preferred}` : ""}.${noteLine}\n\nWe'll be in touch about collection and payment. Reply to this message if you have any questions.`;
+    const payLine = amount > 0 && link
+      ? `\n\nThe total is KES ${amount.toLocaleString("en-KE")}. Pay by M-Pesa here: ${link}`
+      : `\n\nWe'll be in touch about collection and payment.${link ? ` You can check your request here: ${link}` : ""}`;
+    body = `Good news: your ${what.label} has been approved${preferred ? ` for ${preferred}` : ""}.${noteLine}${payLine}\n\nReply to this message if you have any questions.`;
   } else if (status === "rejected") {
     subject = `About your ${what.label}`;
     body = `Thank you for your ${what.label}. Unfortunately we can't take it on this time.${noteLine}\n\nYou're welcome to send a new request at ${newRequestLink}`;

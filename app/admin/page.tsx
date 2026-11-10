@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import type { Document } from "mongodb";
 import { getAdmin } from "@/lib/admin-auth";
 import { formatDate, todayInKenya } from "@/lib/dates";
+import { paymentStatus } from "@/lib/payments";
 import { STATUS_LABELS, customerMessage, mailtoLink, whatsappLink, type RequestKind } from "@/lib/request-decisions";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,7 @@ const CUSTOMER_EMAIL: Record<string, string> = { sent: "Customer emailed automat
 const ERRORS: Record<string, string> = {
   decision: "Choose Approve, Reject or Suggest another date.",
   date: "Choose a new date from today onwards.",
+  amount: "Enter the amount to pay as whole shillings, from 1 to 250,000.",
   missing: "That request couldn't be found.",
   unavailable: "The change couldn't be saved. Please try again.",
 };
@@ -27,6 +29,9 @@ function RequestCard({ kind, r, siteUrl, today }: { kind: RequestKind; r: Docume
   const phone = String(r.phone ?? "");
   const mail = message ? mailtoLink(email, message.subject, message.text) : null;
   const whatsapp = message ? whatsappLink(phone, message.text) : null;
+  const estimate = Array.isArray(r.items) ? r.items.reduce((sum: number, i: { quantity?: number; indicativePrice?: number }) => sum + Number(i.quantity ?? 0) * Number(i.indicativePrice ?? 0), 0) : 0;
+  const pay = paymentStatus(r);
+  const amountDue = Number(r.amountDue);
 
   return (
     <article className="request-card" id={`req-${id}`}>
@@ -56,6 +61,16 @@ function RequestCard({ kind, r, siteUrl, today }: { kind: RequestKind; r: Docume
             </>
           )}
           <div>Preferred date: {typeof r.preferredDate === "string" && r.preferredDate ? formatDate(r.preferredDate) : "not given"}</div>
+          {estimate > 0 && <div>Estimated from list prices: KES {estimate.toLocaleString("en-KE")}</div>}
+          {amountDue > 0 && (
+            <div>
+              To pay: <strong>KES {amountDue.toLocaleString("en-KE")}</strong> ·{" "}
+              {pay === "paid" ? <strong>Paid{r.payment?.receipt ? ` (${String(r.payment.receipt)})` : ""}</strong>
+                : pay === "pending" ? "Customer is entering their M-Pesa PIN"
+                : pay === "failed" ? `Payment failed${r.payment?.resultDesc ? ` (${String(r.payment.resultDesc)})` : ""}`
+                : "Not paid yet"}
+            </div>
+          )}
         </div>
       </div>
 
@@ -78,10 +93,19 @@ function RequestCard({ kind, r, siteUrl, today }: { kind: RequestKind; r: Docume
           <label><input type="radio" name="decision" value="rejected" defaultChecked={status === "rejected"} /> Reject</label>
           <label><input type="radio" name="decision" value="reschedule" defaultChecked={status === "reschedule"} /> Suggest another date</label>
         </fieldset>
+        <div className="field"><label htmlFor={`amount-${id}`}>Amount to pay by M-Pesa, KES (only for &ldquo;Approve&rdquo;; leave empty to arrange payment yourself)</label><input id={`amount-${id}`} name="amountDue" inputMode="numeric" pattern="[0-9,]*" defaultValue={amountDue > 0 ? String(amountDue) : estimate > 0 ? String(estimate) : ""} /></div>
         <div className="field"><label htmlFor={`date-${id}`}>New date (only for &ldquo;Suggest another date&rdquo;)</label><input id={`date-${id}`} name="proposedDate" type="date" min={today} defaultValue={typeof r.proposedDate === "string" ? r.proposedDate : ""} /></div>
         <div className="field"><label htmlFor={`note-${id}`}>Message to the customer (optional)</label><textarea id={`note-${id}`} name="note" rows={2} maxLength={1000} defaultValue={String(r.decisionNote ?? "")} /></div>
         <button className="btn smallbtn" type="submit">Save</button>
       </form>
+
+      {status === "approved" && pay !== "paid" && (
+        <form className="decision-form paid-form" action={`/api/admin/requests/${kind}/${id}/paid`} method="post">
+          <label htmlFor={`receipt-${id}`}>Paid another way (cash or M-Pesa sent directly)? Receipt or note</label>
+          <input id={`receipt-${id}`} name="receipt" maxLength={60} placeholder="e.g. M-Pesa code or Cash" />
+          <button className="btn outline smallbtn" type="submit">Mark as paid</button>
+        </form>
+      )}
     </article>
   );
 }
@@ -111,7 +135,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       <main className="section">
         <div className="eyebrow">Administration</div>
         <h1>Welcome, {s.name}</h1>
-        {params.saved === "1" && <p className="notice" role="status">Saved. Let the customer know using the buttons on that request.</p>}
+        {params.saved === "1" && <p className="notice" role="status">Saved. Let the customer know using the Email or WhatsApp buttons on that request. The message includes their payment link.</p>}
         {params.error && <p className="notice" role="alert">{ERRORS[params.error] ?? ERRORS.unavailable}</p>}
         <div className="products">
           <article className="product"><div className="productbody"><h3>Waiting for a decision</h3><h2>{waiting}</h2></div></article>
