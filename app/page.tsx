@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { products } from "@/data/products";
-import { LOCATION, PAYBILL, PHONES, SERVICES } from "@/lib/business";
+import { DELIVERY_AREA, LOCATION, PAYBILL, PHONES, SERVICES } from "@/lib/business";
 import { getSession } from "@/lib/session";
 
 function money(n: number) { return `KES ${n.toLocaleString("en-KE")}`; }
@@ -11,7 +11,7 @@ export default async function Home() {
   const session = await getSession();
   return (
     <>
-      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail</span></div>
+      <div className="topbar"><span>📍 {LOCATION}</span><span>☎ {phoneLinks}</span><span>Wholesale &amp; retail · Delivery across {DELIVERY_AREA}</span></div>
       <nav className="navbar">
         <Link href="/" className="brand"><span className="brandicon">📚</span><span>ORIA<small>EXAM SUPPLIES · Wholesale &amp; Retail</small></span></Link>
         <div className="navlinks">
@@ -66,7 +66,7 @@ export default async function Home() {
       <footer className="footer" id="contact">
         <div className="footergrid">
           <div><div className="brand" style={{ color: "white" }}>📚 ORIA<small style={{ color: "#d7e4f4" }}>EXAM SUPPLIES</small></div><p>Wholesale &amp; retail dealers in exams, assessment, printing and stationery.</p></div>
-          <div><b>Visit Us</b><p>{LOCATION}</p></div>
+          <div><b>Visit Us</b><p>{LOCATION}</p><p>We deliver across {DELIVERY_AREA}.</p></div>
           <div><b>Contact</b><p>Phone: {phoneLinks}<br />Pay: Cash, cheque or M-Pesa Paybill {PAYBILL}</p></div>
         </div>
         <div className="copyright">© {new Date().getFullYear()} Oria Exam Supplies. All rights reserved. · Kericho, Kenya</div>
