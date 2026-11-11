@@ -46,7 +46,7 @@ export default async function Home() {
         <section className="section" id="visit">
           <div className="sectionhead"><div><div className="eyebrow">Find us</div><h2>Visit our shop</h2><p>We&rsquo;re on {LOCATION}. Look for our sign, or call {phoneLinks}.</p></div><a className="btn whatsapp" href={WHATSAPP_GROUP} target="_blank" rel="noopener noreferrer">💬 Join our WhatsApp group</a></div>
           <div className="shop-photos">
-            <figure><img src="/shop-sign.webp" alt="Oria Exam&apos;s roadside sign pointing to the photocopy shop, showing 0711 983 880 and 0780 983 880" /><figcaption>Look for our sign on Temple Road</figcaption></figure>
+            <figure><img className="top" src="/shop-sign.webp" alt="Oria Exam&apos;s roadside sign pointing to the photocopy shop, showing 0711 983 880 and 0780 983 880" /><figcaption>Look for our sign on Temple Road</figcaption></figure>
             <figure><img className="top" src="/shop-shelves.webp" alt="Shelves stocked with Super Gro organic fertiliser and KCSE revision books" /><figcaption>Supergro fertiliser and KCSE revision books in stock</figcaption></figure>
           </div>
         </section>
