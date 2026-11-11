@@ -20,7 +20,7 @@ export default async function Home() {
           <div>
             <div className="eyebrow">Wholesale &amp; retail · Kericho</div>
             <h1>Quality Exam Materials <span>for a Brighter Future</span></h1>
-            <p>Oria Exam Supplies deals in exams and assessment materials for primary and secondary schools and individuals, plus graduation gown hire for PP2, Grade 3, 6 and 9, certificates for graduates (free lamination), photocopying and lamination, office stationery and Supergro organic fertiliser.</p>
+            <p>Oria Exam Supplies deals in exams/assessment materials for primary and secondary schools and individuals, plus graduation gown hire for PP2, Grade 3, 6 and 9, certificates for graduates (free lamination), photocopying and lamination, office stationery and Supergro organic fertiliser.</p>
             <div className="actions"><a className="btn" href="#products">🛒 Shop Materials</a><a className="btn outline" href="#services">Our Services →</a></div>
           </div>
           <figure className="hero-photo"><img src="/shop-team.webp" alt="The owner of Oria Exam Supplies in her shop, in front of shelves of exam papers and revision books" /><figcaption>Meet the owner of Oria Exam Supplies<small>Karibu to our shop on Temple Road, Kericho</small></figcaption></figure>
